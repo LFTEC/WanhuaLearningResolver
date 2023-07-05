@@ -90,7 +90,39 @@ namespace WanhuaLearningResolver
                 var json = JObject.Parse(final);
                 richTextBox2.Text = json.ToString();
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(richTextBox2.Text.Trim())) return;
+
+            if (String.IsNullOrEmpty(textBox3.Text.Trim())) return;
+
+            var aes = System.Security.Cryptography.Aes.Create();
+
+            string token = textBox3.Text.Trim();
+            var key = token + DateTime.Now.ToString("yyyyMd");
+
+            var md5 = MD5.Create();
+            aes.Key = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(key));
+            aes.IV = md5.ComputeHash(aes.Key);
+            aes.Mode = CipherMode.ECB;
+            aes.Padding = PaddingMode.PKCS7;
+
+            try
+            {
+                var text = richTextBox2.Text.Trim();
+                var textBytes = Encoding.UTF8.GetBytes(text);
+                var final = BinaryConverter.ToString(aes.CreateEncryptor().TransformFinalBlock(textBytes, 0, textBytes.Length));
+
+                richTextBox1.Text = final;
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message);
             }
         }
