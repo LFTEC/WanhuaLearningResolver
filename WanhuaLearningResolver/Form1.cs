@@ -73,7 +73,8 @@ namespace WanhuaLearningResolver
             var aes = System.Security.Cryptography.Aes.Create();
 
             string token = textBox3.Text.Trim();
-            var key = token + DateTime.Now.ToString("yyyyMd");
+            var date = dateTimePicker1.Value;
+            var key = token + date.ToString("yyyyMd");
 
             var md5 = MD5.Create();
             aes.Key = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(key));
