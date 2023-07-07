@@ -127,5 +127,25 @@ namespace WanhuaLearningResolver
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                IDataObject dataOjbect = Clipboard.GetDataObject();
+                if (dataOjbect.GetDataPresent(DataFormats.StringFormat))
+                {
+                    e.Handled = true;
+                    var content = (string)Clipboard.GetData(DataFormats.StringFormat);
+                    Clipboard.Clear();
+                    Clipboard.SetData(DataFormats.StringFormat, content);
+                    ((RichTextBox)sender).Paste();
+                }
+                else
+                {
+                    e.Handled = true;
+                }
+            }
+        }
     }
 }
